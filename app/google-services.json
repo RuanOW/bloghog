@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "874490749617",
+    "firebase_url": "https://bloghog-e06ae.firebaseio.com",
+    "project_id": "bloghog-e06ae",
+    "storage_bucket": "bloghog-e06ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874490749617:android:31cfad90eb4a6c39cfb890",
+        "android_client_info": {
+          "package_name": "com.ruandenecker.bloghog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "874490749617-ps2pb8pf2lri09ae5iiblisguhitjree.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmM91PVph_9pCu98k2J0XNEZ7kuduPNuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "874490749617-ps2pb8pf2lri09ae5iiblisguhitjree.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
