@@ -1,4 +1,4 @@
-package com.example.bloghog
+package com.ruandenecker.bloghog
 
 import org.junit.Test
 
