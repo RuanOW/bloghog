@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/listAllBlogsFragment2">
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.ruandenecker.bloghog.auth.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_listAllBlogsFragment2"
+            app:destination="@id/listAllBlogsFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/listAllBlogsFragment2"
+        android:name="com.ruandenecker.bloghog.ListAllBlogsFragment"
+        android:label="fragment_list_all_blogs"
+        tools:layout="@layout/fragment_list_all_blogs" >
+        <action
+            android:id="@+id/action_listAllBlogsFragment2_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+</navigation>
