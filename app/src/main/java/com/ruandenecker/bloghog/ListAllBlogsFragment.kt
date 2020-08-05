@@ -28,7 +28,7 @@ class ListAllBlogsFragment : Fragment() {
             val firebaseUser = firebaseAuth.currentUser
             if (firebaseUser == null){
                 Log.d("Authentication", "This use is not logged in")
-                findNavController().navigate(R.id.action_listAllBlogsFragment2_to_registerFragment)
+                findNavController().navigate(R.id.loginFragment)
             }
         }
         return inflater.inflate(R.layout.fragment_list_all_blogs, container, false)
