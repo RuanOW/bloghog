@@ -15,6 +15,7 @@
             android:id="@+id/allBlogRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/fragment_all_blog_item" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
