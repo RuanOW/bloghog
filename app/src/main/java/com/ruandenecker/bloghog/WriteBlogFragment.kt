@@ -1,13 +1,20 @@
 package com.ruandenecker.bloghog
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.ImageDecoder
 import android.inputmethodservice.Keyboard
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.Timestamp
@@ -16,6 +23,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.google.type.DateTime
 import com.ruandenecker.bloghog.data.BlogPost
 import com.ruandenecker.bloghog.databinding.FragmentWriteBlogBinding
@@ -27,6 +36,8 @@ class WriteBlogFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentWriteBlogBinding
     private lateinit var db: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
+    private lateinit var uri: Uri
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +48,13 @@ class WriteBlogFragment : Fragment() {
         auth = Firebase.auth
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_write_blog, container, false)
         db = Firebase.firestore
+        storage = Firebase.storage
+
+        binding.uploadBlogImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
+        }
 
         binding.PublishBlog.setOnClickListener {
 
@@ -47,22 +65,16 @@ class WriteBlogFragment : Fragment() {
                 "subheading" to binding.blogSubHeading.text.toString(),
                 "body" to binding.blogBodyCopy.text.toString()
             )
-//            val blogdata = BlogPost(
-//                auth.currentUser?.uid ?: "",
-//                Timestamp.now(),
-//                binding.blogMainHeading.text.toString(),
-//                binding.blogSubHeading.text.toString(),
-//                binding.blogBodyCopy.text.toString()
-//            )
 
             db.collection("blogs")
                 .add(blog)
                 .addOnFailureListener {
-                    Log.d("blog", "Failed to post the blog")
+                    Log.d("WriteBlogFragment", "Failed to post the blog")
                     Toast.makeText(context, "Failed to post blog", Toast.LENGTH_SHORT).show()
                 }
                 .addOnSuccessListener {
-                    Log.d("blog", "The blog was posted successfully")
+                    Log.d("WriteBlogFragment", "The blog was posted successfully ${it.id}")
+                    UploadImageToStorage(it.id)
                     Toast.makeText(context, "You blog has been posted", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_writeBlogFragment_to_listAllBlogsFragment2)
                 }
@@ -74,6 +86,43 @@ class WriteBlogFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
+            uri = data.data!!
+            Log.d("WriteBlogFragment", "Photo URI: $uri")
+            binding.uploadBlogImage.setImageURI(uri)
+        }
+    }
+
+    private fun UploadImageToStorage(blogId: String){
+        val fileName = UUID.randomUUID().toString()
+        Log.d("WriteBlogFragment", "UUID: $fileName")
+        val ref = storage.getReference("/images/${fileName}")
+        ref.putFile(uri)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener {
+                    Log.d("WriteBlogFragment", "Image URL: $it")
+                    SaveImageToUser(it.toString(), blogId)
+                }
+            }
+            .addOnFailureListener {
+                Log.d("WriteBlogFragment", "Failed Upload: $it")
+            }
+    }
+
+    private fun SaveImageToUser(imageUrl: String, blogId: String){
+
+        db.collection("blogs").document(blogId).update("headerImageUrl", imageUrl)
+            .addOnSuccessListener {
+                Log.d("WriteBlogFragment", "Document: $it")
+            }
+            .addOnFailureListener {
+                Log.d("WriteBlogFragment", "Failed to update blog document:$imageUrl")
+            }
     }
 
 }

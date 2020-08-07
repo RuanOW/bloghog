@@ -18,11 +18,13 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.ruandenecker.bloghog.data.BlogPost
 import com.ruandenecker.bloghog.databinding.FragmentListAllBlogsBinding
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.fragment_all_blog_item.*
 import kotlinx.android.synthetic.main.fragment_all_blog_item.view.*
+import kotlinx.android.synthetic.main.fragment_blog_item_detail.*
 
 
 class ListAllBlogsFragment : Fragment() {
@@ -76,7 +78,6 @@ class ListAllBlogsFragment : Fragment() {
             findNavController().navigate(R.id.action_listAllBlogsFragment2_to_writeBlogFragment)
         }
 
-
         return binding.root
     }
 
@@ -87,6 +88,10 @@ class BlogItem(val blogItem: BlogPost) : Item(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.mainHeading.text = blogItem.title
         viewHolder.subHeading.text = blogItem.subheading
+        viewHolder.timeStamp.text = blogItem.timestamp.toDate().toString()
+        if(blogItem.headerImageUrl != "" && blogItem.headerImageUrl.isNotEmpty()){
+            Picasso.get().load(blogItem.headerImageUrl).fit().centerCrop().into(viewHolder.imageView);
+        }
     }
 
     override fun getLayout(): Int = R.layout.fragment_all_blog_item
