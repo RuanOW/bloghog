@@ -22,6 +22,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.fragment_all_blog_item.*
+import kotlinx.android.synthetic.main.fragment_all_blog_item.view.*
 
 
 class ListAllBlogsFragment : Fragment() {
@@ -42,13 +43,25 @@ class ListAllBlogsFragment : Fragment() {
         val adapter = GroupAdapter<GroupieViewHolder>()
         binding.allBlogRecyclerView.setAdapter(adapter)
 
+        adapter.setOnItemClickListener { item, view ->
+            val blogI = item as BlogItem
+            Log.d("ItemClicked", "Item ID ${blogI.blogItem.id}")
+            val action = ListAllBlogsFragmentDirections.actionListAllBlogsFragment2ToBlogItemDetailFragment(blogI.blogItem.id)
+            findNavController().navigate(action)
+
+        }
+
         db.collection("blogs").get()
             .addOnSuccessListener {
-                for (blog in it) {
-                    val resultBlogItem = blog.toObject<BlogPost>()
-                    Log.d("BlogItem", "$resultBlogItem")
-                    adapter.add(BlogItem(resultBlogItem))
+                if (it != null){
+                    for (blog in it) {
+                        var resultBlogItem = blog.toObject<BlogPost>()
+                        resultBlogItem.id = blog.id
+                        Log.d("BlogItem", "ID=> ${resultBlogItem.id}")
+                        adapter.add(BlogItem(resultBlogItem))
+                    }
                 }
+
             }
 
         auth.addAuthStateListener { firebaseAuth ->
@@ -69,7 +82,7 @@ class ListAllBlogsFragment : Fragment() {
 
 }
 
-class BlogItem(private val blogItem: BlogPost) : Item(){
+class BlogItem(val blogItem: BlogPost) : Item(){
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.mainHeading.text = blogItem.title

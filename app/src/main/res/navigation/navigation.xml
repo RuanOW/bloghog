@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_listAllBlogsFragment2_to_writeBlogFragment"
             app:destination="@id/writeBlogFragment" />
+        <action
+            android:id="@+id/action_listAllBlogsFragment2_to_blogItemDetailFragment"
+            app:destination="@id/blogItemDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -47,6 +50,18 @@
         tools:layout="@layout/fragment_write_blog" >
         <action
             android:id="@+id/action_writeBlogFragment_to_listAllBlogsFragment2"
+            app:destination="@id/listAllBlogsFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/blogItemDetailFragment"
+        android:name="com.ruandenecker.bloghog.BlogItemDetailFragment"
+        android:label="fragment_blog_item_detail"
+        tools:layout="@layout/fragment_blog_item_detail" >
+        <argument
+            android:name="blogId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_blogItemDetailFragment_to_listAllBlogsFragment2"
             app:destination="@id/listAllBlogsFragment2" />
     </fragment>
 </navigation>

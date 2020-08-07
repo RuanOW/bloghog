@@ -3,7 +3,7 @@ package com.ruandenecker.bloghog.data
 import com.google.firebase.Timestamp
 
 data class BlogPost(
-//    val id: String,
+    var id: String = "",
     val userId: String = "",
     val timestamp: Timestamp = Timestamp.now(),
     val title: String = "",
